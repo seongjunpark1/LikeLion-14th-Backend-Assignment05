@@ -1,6 +1,8 @@
 package com.likelion.likelioncrud.kakao.api.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.likelion.likelioncrud.common.exception.BusinessException;
+import com.likelion.likelioncrud.common.response.code.ErrorCode;
 
 public record KakaoUserInfoResponse(
 
@@ -39,6 +41,13 @@ public record KakaoUserInfoResponse(
         카카오 동의 항목에서 이메일 권한을 설정한 뒤,
         kakaoAccount.email()을 반환하도록 수정해보세요
          */
-        return "test@kakao.com";
+        if (kakaoAccount == null || kakaoAccount.email() == null || kakaoAccount.email().isBlank()) {
+            throw new BusinessException(
+                    ErrorCode.KAKAO_EMAIL_NOT_FOUND_EXCEPTION,
+                    ErrorCode.KAKAO_EMAIL_NOT_FOUND_EXCEPTION.getMessage()
+            );
+        }
+
+        return kakaoAccount.email();
     }
 }
